@@ -37,6 +37,12 @@ let persons: Person[] =  [
     res.json(persons)
   })
 
+  app.get('/info', (req, res) => {
+    const requestTime = new Date()
+    const responseData = `<p>Phonebook has info for ${persons.length} people</p><p>${requestTime}</p>`
+    res.send(responseData)
+  })
+
 
 const PORT = 3003
 app.listen(PORT)
