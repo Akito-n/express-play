@@ -1,0 +1,22 @@
+{
+  "name": "part3-e",
+  "version": "1.0.0",
+  "description": "fullstack part3",
+  "main": "index.ts",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akito-n/express-play.git"
+  },
+  "keywords": [
+    "express-play"
+  ],
+  "author": "akito-n",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akito-n/express-play/issues"
+  },
+  "homepage": "https://github.com/Akito-n/express-play#readme"
+}
