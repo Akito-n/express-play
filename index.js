@@ -73,6 +73,6 @@ app["delete"]('/api/persons/:id', function (request, response) {
     persons = persons.filter(function (person) { return person.id !== id; });
     response.send(204).end();
 });
-var PORT = 3008;
+var PORT = process.env.PORT || 3008;
 app.listen(PORT);
 console.log("app is running in " + PORT);
