@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Akito-n/express-play#readme",
   "dependencies": {
     "@types/node": "^14.6.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "ts-node": "^8.10.2"
   },
