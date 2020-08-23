@@ -94,6 +94,6 @@ app.delete('/api/persons/:id', (request, response) => {
   response.send(204).end();
 });
 
-const PORT = 3008;
+const PORT = process.env.PORT || 3008;
 app.listen(PORT);
 console.log(`app is running in ${PORT}`);
