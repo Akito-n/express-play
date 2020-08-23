@@ -2,6 +2,7 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 app.use(cors());
+app.use(express.static('build'));
 app.use(express.json());
 var persons = [
     {
