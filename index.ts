@@ -1,4 +1,5 @@
 import { notEqual } from "assert";
+import { nextTick } from "process";
 
 require('dotenv').config()
 
@@ -12,16 +13,16 @@ app.use(cors())
 app.use(express.static('build'))
 app.use(express.json());
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   PhoneBook.find({}).then(phoneBooks => {
     response.json(phoneBooks);
-  })
+  }).catch(e => next(e))
 });
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   PhoneBook.findById(request.params.id).then(phoneBook => {
     response.json(phoneBook)
-  })
+  }).catch(e => next(e))
 });
 
 app.get('/info', (req, res) => {
@@ -32,8 +33,12 @@ app.get('/info', (req, res) => {
   res.send(responseData);
 });
 
-app.post('/api/persons/', (request, response) => {
+app.post('/api/persons/', (request, response, next) => {
   const body = request.body;
+
+  if(body.name === undefined){
+    return response.status(400).json({error: 'content missing'})
+  }
 
   // const phoneBooks = PhoneBook.find({}).then(phoneBooks => phoneBooks)
 
@@ -54,19 +59,36 @@ app.post('/api/persons/', (request, response) => {
 
   phoneBook.save().then(savedPhoneBook => {
     response.json(savedPhoneBook)
-  })
+  }).catch(e => next(e))
 });
 
-// app.delete('/api/persons/:id', (request, response) => {
-//   const id = Number(request.params.id);
+app.delete('/api/persons/:id', (request, response, next) => {
+  PhoneBook.findByIdAndRemove(request.params.id).then(_ => {
+    response.json(204).end()
+  }).catch(error => next(error))
 
-//   console.log('delete');
+  response.send(204).end();
+});
 
-//   persons = persons.filter((person) => person.id !== id);
 
-//   response.send(204).end();
-// });
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if(error.name === 'CastError'){
+    return response.status(400).send({error: 'malformatted id'})
+  } else if(error.name === 'ValidationError'){
+    return response.status(400).json({error: error.message})
+  }
+  next(error)
+}
+
+app.use(errorHandler)
 const PORT = process.env.PORT
 app.listen(PORT);
 console.log(`app is running in ${PORT}`);
